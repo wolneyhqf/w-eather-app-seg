@@ -9,6 +9,20 @@ export interface CityWeatherResponse {
     pressure: number;
     uvi: number;
   }
+  daily?: Array<{
+    dt: number;
+    temp: {
+      min: number;
+      max: number;
+    };
+    humidity: number;
+    wind_speed: number;
+    pressure: number;
+    uvi: number;
+    weather?: Array<{
+      description: string;
+    }>;
+  }>;
 }
 
 export async function getCityWeather({lat, lon}: {lat: number, lon: number}){

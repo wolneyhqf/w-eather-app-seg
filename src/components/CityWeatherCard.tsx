@@ -1,4 +1,4 @@
-import { Text, View, StyleSheet } from "react-native";
+import { Text, View, StyleSheet, TouchableOpacity } from "react-native";
 
 export interface CityWeatherData {
     date: string;
@@ -11,15 +11,28 @@ export interface CityWeatherData {
 }
 
 export interface CityWeatherCardProps {
-   cityWeatherData: CityWeatherData
+   cityWeatherData: CityWeatherData;
+   onRemove?: () => void;
+   onViewForecast?: () => void;
 }
 
-export default function CityWeatherCard({ cityWeatherData }: CityWeatherCardProps) {
+export default function CityWeatherCard({ cityWeatherData, onRemove, onViewForecast }: CityWeatherCardProps) {
     return (
         <View style={styles.container}>
             <View style={styles.card}>
                 <View style={styles.header}>
-                    <Text style={styles.cityName}>{cityWeatherData.city}</Text>
+                    <View style={styles.headerTop}>
+                        <Text style={styles.cityName}>{cityWeatherData.city}</Text>
+                        {onRemove && (
+                            <TouchableOpacity 
+                                style={styles.removeButton}
+                                onPress={onRemove}
+                                accessibilityLabel="Remove card"
+                            >
+                                <Text style={styles.removeButtonText}>✕</Text>
+                            </TouchableOpacity>
+                        )}
+                    </View>
                     <Text style={styles.date}>{cityWeatherData.date}</Text>
                 </View>
                 
@@ -51,6 +64,16 @@ export default function CityWeatherCard({ cityWeatherData }: CityWeatherCardProp
                         </View>
                     </View>
                 </View>
+
+                {onViewForecast && (
+                    <TouchableOpacity 
+                        style={styles.forecastButton}
+                        onPress={onViewForecast}
+                        accessibilityLabel="View forecast"
+                    >
+                        <Text style={styles.forecastButtonText}>View forecast</Text>
+                    </TouchableOpacity>
+                )}
             </View>
         </View>
     )
@@ -65,7 +88,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#667eea',
         borderRadius: 20,
         padding: 24,
-        height: 360,
+        minHeight: 400,
         shadowColor: '#000',
         shadowOffset: {
             width: 0,
@@ -79,6 +102,13 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         marginBottom: 20,
     },
+    headerTop: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: '100%',
+        position: 'relative',
+    },
     cityName: {
         fontSize: 24,
         fontWeight: 'bold',
@@ -88,6 +118,24 @@ const styles = StyleSheet.create({
         textShadowColor: 'rgba(0, 0, 0, 0.3)',
         textShadowOffset: { width: 0, height: 1 },
         textShadowRadius: 2,
+        flex: 1,
+    },
+    removeButton: {
+        position: 'absolute',
+        right: 0,
+        top: -4,
+        width: 32,
+        height: 32,
+        borderRadius: 16,
+        backgroundColor: 'rgba(255, 255, 255, 0.2)',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    removeButtonText: {
+        color: '#ffffff',
+        fontSize: 20,
+        fontWeight: 'bold',
+        lineHeight: 20,
     },
     date: {
         fontSize: 14,
@@ -115,8 +163,7 @@ const styles = StyleSheet.create({
         marginLeft: 4,
     },
     weatherDetails: {
-        flex: 1,
-        justifyContent: 'space-between',
+        marginBottom: 20,
     },
     detailRow: {
         flexDirection: 'row',
@@ -145,5 +192,22 @@ const styles = StyleSheet.create({
         color: '#ffffff',
         fontWeight: '600',
         textAlign: 'center',
+    },
+    forecastButton: {
+        backgroundColor: 'rgba(255, 255, 255, 0.25)',
+        borderRadius: 12,
+        paddingVertical: 12,
+        paddingHorizontal: 24,
+        marginTop: 8,
+        alignItems: 'center',
+        borderWidth: 1,
+        borderColor: 'rgba(255, 255, 255, 0.3)',
+    },
+    forecastButtonText: {
+        color: '#ffffff',
+        fontSize: 16,
+        fontWeight: '600',
+        textTransform: 'uppercase',
+        letterSpacing: 1,
     },
 });
